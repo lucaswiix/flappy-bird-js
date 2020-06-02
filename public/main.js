@@ -55,13 +55,15 @@ function addOnePipe(x, y) {
 }
 
 function addRowOfPipes() {
+  if (gameOver) {
+    return;
+  }
   const hole = Math.floor(Math.random() * 5) + 1;
+
   score += 1;
   labelScore.text = score;
   for (let i = 0; i < 8; i++) {
     if (i != hole && i != hole + 1) {
-      if (gameOver) return;
-
       const pipe = pipesGroup.create(400, i * 60 + 10, 'pipe');
       pipe.body.allowGravity = false;
     }
@@ -71,7 +73,7 @@ function addRowOfPipes() {
 function create() {
   scene = this;
   pipesGroup = this.physics.add.group();
-  player = this.physics.add.sprite(100, 245, 'bird');
+  player = this.physics.add.sprite(60, 200, 'bird');
   player.body.gravity.y = 500;
   player.setCollideWorldBounds(true);
   const spaceKey = this.input.keyboard.addKey(
@@ -126,12 +128,12 @@ function create() {
 }
 
 function update() {
-  if (player.y < 0 || player.y > config.height) {
-    restart();
-  }
-
   if (gameOver) {
     return;
+  }
+
+  if (player.y < 0 || player.y > config.height) {
+    restart();
   }
 
   if (player.angle < 20) {
@@ -146,16 +148,19 @@ function update() {
   });
 }
 
-function hitBird(player) {
+function hitBird() {
   this.physics.pause();
 
   gameOver = true;
+
   restartButton.visible = true;
   restartText.visible = true;
 }
 
 function jump() {
   if (gameOver) {
+    restart();
+
     return;
   }
 
@@ -178,7 +183,7 @@ function restart() {
 function prepareGame(scene) {
   gameOver = false;
   score = 0;
-  player = scene.physics.add.sprite(60, 265, 'bird');
+  player = scene.physics.add.sprite(60, 200, 'bird');
   player.setCollideWorldBounds(true);
   player.body.gravity.y = 500;
 
