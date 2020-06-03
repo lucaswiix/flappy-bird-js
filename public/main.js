@@ -157,6 +157,8 @@ function create() {
     Phaser.Input.Keyboard.KeyCodes.SPACE
   );
 
+  this.input.mouse.disableContextMenu();
+
   currentPipe = assets.obstacle.pipe;
 
   ground = this.physics.add.sprite(
@@ -175,6 +177,11 @@ function create() {
   });
 
   spaceKey.on('down', jump);
+  this.input.on('pointerup', function (pointer) {
+    if (pointer.leftButtonReleased()) {
+      jump();
+    }
+  });
 
   this.anims.create({
     key: assets.animation.ground.moving,
